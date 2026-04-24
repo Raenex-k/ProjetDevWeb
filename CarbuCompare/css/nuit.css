@@ -1,0 +1,33 @@
+/* Mode nuit : on redefinit juste les couleurs, tout le reste vient de style.css */
+
+:root {
+    --vert: #4FBFB4;         /* vert clair plus visible sur fond sombre */
+    --vert-clair: #1A2E2C;   /* fond "vert fonce" pour les hover */
+    --orange: #FF8A3D;       /* orange legerement plus vif */
+    --orange-clair: #3A2317; /* fond "orange fonce" */
+    --texte: #E8E9E6;        /* texte clair */
+    --gris: #9AA19D;
+    --fond: #1E2723;         /* fond principal sombre */
+    --fond-beige: #2A332F;   /* zones mises en avant */
+    --bordure: #3C4641;
+    --pied-fond: #12191B;
+    --pied-fond-bas: #0A0F11;
+    --pied-texte: #D1D5D3;
+    --pied-gris: #8A928F;
+}
+
+/* Le seul ajustement necessaire pour la nuit :
+   les couleurs du bouton "Nuit" actif */
+.theme a.actif {
+    background: var(--vert);
+    color: var(--fond);
+}
+
+/* Reglages mineurs pour la lisibilite */
+.film-image {
+    opacity: 0.95;
+}
+
+.barre {
+    background: var(--bordure);
+}
