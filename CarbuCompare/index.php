@@ -76,19 +76,19 @@ require_once "include/header.inc.php";
 
         <div class="chiffres">
             <div class="chiffre">
-                <p class="chiffre-valeur"><?= nb_regions() ?></p>
+                <p class="chiffre-valeur" role="heading" aria-level="3">13</p>
                 <p class="chiffre-label">regions metropolitaines couvertes</p>
             </div>
             <div class="chiffre">
-                <p class="chiffre-valeur"><?= nb_departements() ?></p>
+                <p class="chiffre-valeur" role="heading" aria-level="3"><?= nb_departements() ?></p>
                 <p class="chiffre-label">departements accessibles</p>
             </div>
             <div class="chiffre">
-                <p class="chiffre-valeur"><?= number_format(nb_communes(), 0, ',', ' ') ?></p>
+                <p class="chiffre-valeur" role="heading" aria-level="3" ><?= number_format(nb_communes(), 0, ',', ' ') ?></p>
                 <p class="chiffre-label">communes referencees</p>
             </div>
             <div class="chiffre">
-                <p class="chiffre-valeur" style="font-size: 1.4rem;"><?= date_maj_donnees() ?></p>
+                <p class="chiffre-valeur" style="font-size: 1.4rem;"  role="heading" aria-level="3"><?= date_maj_donnees() ?></p>
                 <p class="chiffre-label">derniere mise a jour des donnees</p>
             </div>
         </div>
@@ -112,7 +112,7 @@ require_once "include/header.inc.php";
                     <span class="source-titre">Regions &amp; departements</span>
                     <p class="source-desc">Code officiel geographique de l'INSEE</p>
                 </a>
-                <a class="source" href="https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/" target="_blank">
+                <a class="source" href="https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux" target="_blank">
                     <span class="source-titre">Communes francaises</span>
                     <p class="source-desc">Base officielle des codes postaux</p>
                 </a>

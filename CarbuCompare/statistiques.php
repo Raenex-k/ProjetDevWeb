@@ -1,33 +1,27 @@
 <?php
-// Page "Statistiques" : compteur de visites et villes consultees
+// Page "Statistiques" : visites par page + villes les plus consultees
 
 require_once "include/functions.inc.php";
 
 $page_title    = "Statistiques";
-$page_desc     = "Nombre de visites par page et villes les plus consultees.";
+$page_desc     = "Villes les plus consultees et visites du site.";
 $page_courante = "stats";
 
 incrementerCompteur('statistiques');
 
-// Lecture du compteur de visites depuis le fichier
+// ---- Compteur de visites par page ----
 $compteurs = [];
 $fichier = __DIR__ . '/data/compteur.txt';
 if (file_exists($fichier)) {
-    foreach (file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ligne) {
-        $parts = explode(':', $ligne);
-        if (count($parts) === 2) {
-            $compteurs[$parts[0]] = (int) $parts[1];
-        }
+    foreach (file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) {
+        $parts = explode(':', $l);
+        if (count($parts) === 2) $compteurs[$parts[0]] = (int) $parts[1];
     }
 }
-
-// Total de toutes les visites
-$total = array_sum($compteurs);
-
-// Trouver le maximum pour dimensionner les barres de l'histogramme
+$total_visites = array_sum($compteurs);
 $max = !empty($compteurs) ? max($compteurs) : 1;
 
-// Noms jolis pour les pages
+// Noms jolis des pages
 $noms_pages = [
     'index'        => 'Accueil',
     'carburants'   => 'Comparateur',
@@ -37,6 +31,10 @@ $noms_pages = [
     'plan'         => 'Plan du site',
 ];
 
+// ---- Top 10 des villes les plus consultees ----
+$top_villes = villes_les_plus_consultees(10);
+$max_ville  = !empty($top_villes) ? max($top_villes) : 1;
+
 require_once "include/header.inc.php";
 ?>
 
@@ -45,33 +43,78 @@ require_once "include/header.inc.php";
 <section class="page-titre">
     <div class="contenu">
         <h1>Statistiques du site</h1>
-        <p>Nombre de visites par page et aperçu de l'activite globale.</p>
+        <p>Villes les plus consultees et activite globale.</p>
     </div>
 </section>
 
 <div class="contenu">
 
-    <!-- Chiffre global en haut -->
+<h2>Chiffres globaux</h2>
+
     <div class="chiffres">
         <div class="chiffre">
-            <p class="chiffre-valeur"><?= $total ?></p>
+            <p class="chiffre-valeur" role="heading" aria-level="2"><?= $total_visites ?></p>
             <p class="chiffre-label">visites totales sur le site</p>
         </div>
         <div class="chiffre">
-            <p class="chiffre-valeur"><?= count($compteurs) ?></p>
-            <p class="chiffre-label">pages consultees au moins une fois</p>
+            <p class="chiffre-valeur" role="heading" aria-level="2"><?= array_sum($top_villes) ?></p>
+            <p class="chiffre-label">consultations de villes enregistrees</p>
         </div>
         <div class="chiffre">
-            <p class="chiffre-valeur"><?= $max ?></p>
-            <p class="chiffre-label">visites sur la page la plus vue</p>
+            <p class="chiffre-valeur" role="heading" aria-level="2"><?= count($top_villes) ?></p>
+            <p class="chiffre-label">villes differentes consultees</p>
         </div>
     </div>
+
+    <!-- Histogramme des villes les plus consultees -->
+    <h2>Top 10 des villes les plus consultees</h2>
+
+    <?php if (empty($top_villes)) { ?>
+        <p class="rappel">
+            Aucune ville consultee pour le moment. Allez sur le
+            <a href="carburants.php">comparateur</a> pour selectionner une ville.
+        </p>
+    <?php } else { ?>
+        <table class="histogramme">
+            <thead>
+                <tr>
+                    <th>Ville</th>
+                    <th>Consultations</th>
+                    <th>Histogramme</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($top_villes as $ville => $n) {
+                    $largeur = ($n / $max_ville) * 100;
+                ?>
+                    <tr>
+                       
+                        <td>
+                            <?php
+                                // On extrait juste le nom de la ville sans le cp entre parenthese 
+                                $nom_seul = preg_replace('/\s*\(.*\)$/', '', $ville);
+                            ?>
+                            <a href="carburants.php?recherche=<?= urlencode($nom_seul) ?>">
+                                <?= clean($ville) ?>
+                            </a>
+                        </td>
+                        <td class="nombre"><?= $n ?></td>
+                        <td>
+                            <div class="barre">
+                                <div class="barre-remplie" style="width: <?= $largeur ?>%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    <?php } ?>
 
     <!-- Histogramme des visites par page -->
     <h2>Visites par page</h2>
 
     <?php if (empty($compteurs)) { ?>
-        <p>Aucune visite enregistree pour le moment.</p>
+        <p>Aucune visite enregistree.</p>
     <?php } else { ?>
         <table class="histogramme">
             <thead>
@@ -84,7 +127,6 @@ require_once "include/header.inc.php";
             <tbody>
                 <?php foreach ($compteurs as $page => $n) {
                     $nom = $noms_pages[$page] ?? $page;
-                    // Largeur de la barre en pourcentage (entre 0 et 100)
                     $largeur = ($n / $max) * 100;
                 ?>
                     <tr>
@@ -101,11 +143,7 @@ require_once "include/header.inc.php";
         </table>
     <?php } ?>
 
-    <p class="rappel">
-        Les statistiques sont stockees dans un fichier texte sur le serveur
-        (<code>data/compteur.txt</code>). Chaque chargement d'une page ajoute 1
-        au compteur correspondant.
-    </p>
+
 
 </div>
 </main>

@@ -7,12 +7,10 @@ if (!isset($page_desc))     $page_desc     = 'Prix des carburants en France.';
 if (!isset($page_courante)) $page_courante = '';
 
 // Gestion du theme (cookie qui dure 30 jours)
-// Si on recoit ?theme=jour ou ?theme=nuit, on met a jour le cookie
 if (isset($_GET['theme']) && in_array($_GET['theme'], ['jour', 'nuit'])) {
     setcookie('theme', $_GET['theme'], time() + 30 * 24 * 3600, '/');
     $theme = $_GET['theme'];
 } else {
-    // Sinon on lit le cookie existant (par defaut : jour)
     $theme = $_COOKIE['theme'] ?? 'jour';
 }
 ?>
@@ -37,7 +35,7 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], ['jour', 'nuit'])) {
         <a class="marque" href="index.php">
             <img src="images/logo.png" alt="" />
             <div>
-                <p class="titre">Comparateur</span></p>
+                <p class="titre" role="heading" aria-level="1">Les prix des carburants</p>
                 <p class="baseline">Prix des carburants en France metropolitaine</p>
             </div>
         </a>

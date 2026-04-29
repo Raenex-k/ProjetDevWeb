@@ -7,7 +7,7 @@
 
             <!-- Colonne 1 : marque et infos binome -->
             <div>
-                <h2>CarbuCompare</h2>
+                <h2>Comparateur de prix </h2>
                 <p>
                     Comparateur de prix des carburants en France metropolitaine,
                     base sur les donnees ouvertes du gouvernement.
@@ -35,8 +35,8 @@
                 <h3>Donnees &amp; sources</h3>
                 <ul>
                     <li><a href="https://data.economie.gouv.fr/" target="_blank">data.economie.gouv.fr</a></li>
-                    <li><a href="https://www.insee.fr/" target="_blank">INSEE</a></li>
-                    <li><a href="https://www.data.gouv.fr/" target="_blank">data.gouv.fr</a></li>
+                    <li><a href="https://www.insee.fr/fr/accueil" target="_blank">INSEE</a></li>
+                    <li><a href="https://www.data.gouv.fr/datasets/base-officielle-des-codes-postaux" target="_blank">data.gouv.fr</a></li>
                     <li><a href="https://ipinfo.io/" target="_blank">ipinfo.io</a></li>
                 </ul>
             </div>
@@ -54,7 +54,7 @@
     <!-- Bande du bas : copyright + liens supplementaires -->
     <div class="pied-bas">
         <div class="contenu">
-            <div>© <?= date('Y') ?> CarbuCompare · Projet pedagogique L2 Informatique</div>
+            <div>© <?= date('Y') ?> Comparateur de prix <br> Projet L2 Informatique</div>
             <div>
                 <a href="plan.php">Plan du site</a>
                 <a href="readme.md">README</a>

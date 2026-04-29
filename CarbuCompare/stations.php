@@ -12,20 +12,16 @@ $page_courante = "stations";
 incrementerCompteur('stations');
 
 // Lecture des parametres GET
-$ip_test = $_GET['ip']         ?? '';
+$ip_test = $_GET['ip']    ?? '';
 $rayon   = (int) ($_GET['rayon'] ?? 10);
-$carb    = $_GET['carb']       ?? '';
+$carb    = $_GET['carb']  ?? '';
 
 // Validation simple des valeurs
-if (!in_array($rayon, [5, 10, 20, 50]))  $rayon = 10;
+if (!in_array($rayon, [5, 10, 20, 50])) $rayon = 10;
 if ($carb !== '' && !in_array($carb, CARBURANTS)) $carb = '';
 
 // On choisit l'IP a geolocaliser
-if ($ip_test !== '' && ip_publique($ip_test)) {
-    $ip = $ip_test;
-} else {
-    $ip = ip_visiteur();
-}
+$ip = ($ip_test !== '' && ip_publique($ip_test)) ? $ip_test : ip_visiteur();
 
 $geo = geolocaliser($ip);
 
@@ -33,6 +29,11 @@ $geo = geolocaliser($ip);
 $stations = [];
 if ($geo['ok']) {
     $stations = stations_autour($geo['lat'], $geo['lon'], $rayon * 1000, 40);
+
+    // On log la ville detectee par IP dans les stats
+    if ($geo['ville'] !== '') {
+        logger_ville_consultee('', $geo['ville'], '');
+    }
 }
 
 require_once "include/header.inc.php";
@@ -40,7 +41,6 @@ require_once "include/header.inc.php";
 
 <main>
 
-<!-- Titre de la page -->
 <section class="page-titre">
     <div class="contenu">
         <h1>Stations a proximite</h1>
@@ -82,13 +82,13 @@ require_once "include/header.inc.php";
         </form>
     </div>
 
-    <!-- Filtres : rayon + carburant -->
+    <!-- Filtres : rayon + carburant (sans onchange JavaScript) -->
     <form method="get" action="stations.php" class="filtres">
         <input type="hidden" name="ip" value="<?= clean($ip_test) ?>" />
 
         <div class="filtre">
             <label for="rayon">Rayon de recherche</label>
-            <select id="rayon" name="rayon" onchange="this.form.submit()">
+            <select id="rayon" name="rayon">
                 <?php foreach ([5, 10, 20, 50] as $r) { ?>
                     <option value="<?= $r ?>" <?= $r === $rayon ? 'selected' : '' ?>>
                         <?= $r ?> km
@@ -99,7 +99,7 @@ require_once "include/header.inc.php";
 
         <div class="filtre">
             <label for="carb">Carburant</label>
-            <select id="carb" name="carb" onchange="this.form.submit()">
+            <select id="carb" name="carb">
                 <option value="">Tous les carburants</option>
                 <?php foreach (CARBURANTS as $c) { ?>
                     <option value="<?= $c ?>" <?= $c === $carb ? 'selected' : '' ?>>
@@ -108,12 +108,13 @@ require_once "include/header.inc.php";
                 <?php } ?>
             </select>
         </div>
+
+        <button type="submit" class="bouton bouton-petit">Filtrer</button>
     </form>
 
-    <!-- Resultats de la recherche -->
+    <!-- Resultats -->
     <?php if (!$geo['ok']) { ?>
 
-        <!-- Cas : geoloc impossible -->
         <div class="vide">
             <h2>Impossible de vous localiser</h2>
             <p>
@@ -124,7 +125,6 @@ require_once "include/header.inc.php";
 
     <?php } elseif (empty($stations)) { ?>
 
-        <!-- Cas : aucune station trouvee -->
         <div class="vide">
             <h2>Aucune station dans ce rayon</h2>
             <p>
@@ -135,7 +135,6 @@ require_once "include/header.inc.php";
 
     <?php } else { ?>
 
-        <!-- Cas : on a des stations a afficher -->
         <h2 class="resultats">
             <span class="resultats-nb"><?= count($stations) ?></span>
             stations trouvees dans un rayon de <?= $rayon ?> km
@@ -146,21 +145,13 @@ require_once "include/header.inc.php";
 
         <div class="stations">
             <?php foreach ($stations as $st) {
-
-                // Si un filtre carburant est actif, on saute les stations qui ne l'ont pas
                 if ($carb !== '' && !isset($st['prix'][$carb])) continue;
-
-                // Carburants a afficher dans la carte
-                if ($carb !== '') {
-                    $liste_carbs = [$carb];
-                } else {
-                    $liste_carbs = CARBURANTS;
-                }
+                $liste_carbs = $carb !== '' ? [$carb] : CARBURANTS;
             ?>
                 <article class="station">
                     <header class="station-haut">
                         <h3 class="station-nom">
-                            <?= clean($st['nom'] !== '' ? $st['nom'] : 'Station-service') ?>
+                            <?= clean($st['nom'] ?: 'Station-service') ?>
                         </h3>
                         <?php if (isset($st['distance_km'])) { ?>
                             <span class="station-distance">
@@ -177,7 +168,9 @@ require_once "include/header.inc.php";
                         <?php } ?>
                     </p>
 
-                    <?php if (!empty($st['prix'])) { ?>
+                    <?php if (empty($st['prix'])) { ?>
+                        <p class="prix-aucun">Prix non renseignes</p>
+                    <?php } else { ?>
                         <div class="prix">
                             <?php foreach ($liste_carbs as $c) {
                                 if (!isset($st['prix'][$c])) continue;
@@ -192,19 +185,10 @@ require_once "include/header.inc.php";
                                 </div>
                             <?php } ?>
                         </div>
-                    <?php } else { ?>
-                        <p class="prix-aucun">Prix non renseignes</p>
                     <?php } ?>
                 </article>
             <?php } ?>
         </div>
-
-        <p class="rappel">
-            La geolocalisation par IP est approximative : elle situe le noeud de
-            routage de votre fournisseur, parfois a plusieurs kilometres de chez
-            vous. Pour une recherche precise, utilisez le
-            <a href="carburants.php">comparateur par region et ville</a>.
-        </p>
 
     <?php } ?>
 

@@ -4,7 +4,7 @@
 :root {
     --vert: #0E4F4A;
     --vert-clair: #E6F0EE;
-    --orange: #EA580C;
+    --orange: #C2410C;
     --orange-clair: #FFF1E6;
     --texte: #1A201E;
     --gris: #5A6360;
@@ -17,7 +17,9 @@
     --pied-gris: #8A928F;
 }
 
-* { box-sizing: border-box; }
+* { 
+    box-sizing: border-box;
+ }
 
 body {
     margin: 0;
@@ -572,7 +574,6 @@ a:hover { color: var(--orange); }
 .vide h2 { color: var(--vert); margin-top: 0; }
 .vide p { color: var(--gris); max-width: 520px; margin: 0 auto; }
 
-/* Rappel en bas */
 .rappel {
     margin: 32px 0 0;
     padding: 16px 20px;
@@ -775,4 +776,55 @@ a:hover { color: var(--orange); }
     .film-image { max-width: 200px; }
     .pied-colonnes { grid-template-columns: 1fr; }
     .pied-bas .contenu { flex-direction: column; gap: 12px; }
+}
+
+.bouton-region {
+    padding: 8px 14px;
+    background: var(--fond);
+    border: 1px solid var(--bordure);
+    border-radius: 20px;
+    color: var(--texte);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.bouton-region:hover {
+    border-color: var(--vert);
+    background: var(--vert-clair);
+    color: var(--vert);
+}
+
+.bouton-region.actif {
+    background: var(--vert);
+    color: #FFFFFF;
+    border-color: var(--vert);
+}
+
+.boutons-regions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 32px;
+}
+/* Etape 1 du comparateur : carte a gauche + boutons regions a droite */
+.etape-region {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin: 20px 0 32px;
+}
+
+.etape-region .carte-france {
+    flex: 1;
+    margin: 0;
+}
+
+.etape-region > div:last-child {
+    flex: 1;
+}
+
+.etape-region .boutons-regions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
 }

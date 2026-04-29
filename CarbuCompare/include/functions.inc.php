@@ -14,7 +14,7 @@ function nb_communes() {
 
     $n = 0;
     $f = fopen($fichier, 'r');
-    fgets($f); // on saute l'entete
+    fgets($f); // on saute la premiere ligne 
     while (fgets($f) !== false) $n++;
     fclose($f);
     return $n;
@@ -22,13 +22,13 @@ function nb_communes() {
 
 // Compte les departements (on enleve les DOM-TOM : regions 01 a 06)
 function nb_departements() {
-    $fichier = __DIR__ . '/../data/departements.csv';
+    $fichier = __DIR__ . '/../data/departements.csv'; //dir pour le chemins absolues vers le fichier courant, on met le /.. pour revenir en arriere 
     if (!file_exists($fichier)) return 0;
 
     $dom_tom = ['01', '02', '03', '04', '06'];
     $n = 0;
-    $f = fopen($fichier, 'r');
-    fgetcsv($f, 0, ',', '"', '\\'); // on saute l'entete
+    $f = fopen($fichier, 'r'); 
+    fgetcsv($f, 0, ',', '"', '\\'); // ici on lit la premiere ligne du fichier csv
     while (($ligne = fgetcsv($f, 0, ',', '"', '\\')) !== false) {
         $code_region = trim($ligne[1], '"');
         if (!in_array($code_region, $dom_tom)) $n++;
@@ -37,10 +37,7 @@ function nb_departements() {
     return $n;
 }
 
-// Nombre de regions metropolitaines (fixe depuis 2016)
-function nb_regions() {
-    return 13;
-}
+
 
 // Date de derniere modif du fichier des communes
 function date_maj_donnees() {
@@ -49,19 +46,7 @@ function date_maj_donnees() {
     return date('d/m/Y', filemtime($fichier));
 }
 
-// Lit le cookie de la derniere ville consultee
-function lire_derniere_ville() {
-    if (empty($_COOKIE['derniereville'])) return null;
 
-    $data = json_decode($_COOKIE['derniereville'], true);
-    if (!is_array($data) || empty($data['insee']) || empty($data['ville'])) return null;
-
-    return [
-        'insee' => $data['insee'],
-        'ville' => $data['ville'],
-        'cp'    => $data['cp']   ?? '',
-    ];
-}
 
 // Lit le compteur total de visites
 function lireCompteurTotal() {
@@ -72,7 +57,7 @@ function lireCompteurTotal() {
     $lignes = file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lignes as $l) {
         $parts = explode(':', $l);
-        if (count($parts) === 2) $total += (int) $parts[1];
+        $total += (int) $parts[1];
     }
     return $total;
 }
@@ -86,7 +71,7 @@ function incrementerCompteur($page) {
     if (file_exists($fichier)) {
         foreach (file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) {
             $parts = explode(':', $l);
-            if (count($parts) === 2) $compteurs[$parts[0]] = (int) $parts[1];
+            $compteurs[$parts[0]] = (int) $parts[1];
         }
     }
 
@@ -95,6 +80,50 @@ function incrementerCompteur($page) {
 
     // Reecrire le fichier
     $contenu = '';
-    foreach ($compteurs as $p => $n) $contenu .= $p . ':' . $n . "\n";
+    foreach ($compteurs as $p => $n) {
+            $contenu .= $p . ':' . $n . "\n";
+        } 
     file_put_contents($fichier, $contenu);
+}
+function enregistrer_derniere_ville($insee, $ville, $cp) {
+    $data = json_encode([
+        'insee' => $insee,
+        'ville' => $ville,
+        'cp'    => $cp,
+    ]);
+    setcookie('derniereville', $data, time() + 30 * 24 * 3600, '/');
+}
+function logger_ville_consultee($insee, $ville, $cp) {
+    $fichier = __DIR__ . '/../data/villes_consultees.csv';
+
+    // Si le fichier n'existe pas, on ecrit l'entete d'abord
+    $nouveau = !file_exists($fichier);
+
+    $f = fopen($fichier, 'a');
+    if ($nouveau) {
+        fputcsv($f, ['horodatage', 'insee', 'ville', 'cp'], ';', '"', '\\');
+    }
+    fputcsv($f, [date('Y-m-d H:i:s'), $insee, $ville, $cp], ';', '"', '\\');
+    fclose($f);
+}
+function villes_les_plus_consultees($limite = 10) {
+    $fichier = __DIR__ . '/../data/villes_consultees.csv';
+    if (!file_exists($fichier)) return [];
+
+    $compteur = [];
+    $f = fopen($fichier, 'r');
+    fgetcsv($f, 0, ';', '"', '\\'); // entete
+    while (($ligne = fgetcsv($f, 0, ';', '"', '\\')) !== false) {
+        if (count($ligne) < 4) continue;
+
+        $nom = $ligne[2];
+        if (!empty($ligne[3])) {
+            $nom .= ' (' . $ligne[3] . ')';
+        }
+        $compteur[$nom] = ($compteur[$nom] ?? 0) + 1;
+    }
+    fclose($f);
+
+    arsort($compteur);
+    return array_slice($compteur,0, $limite, true);
 }
