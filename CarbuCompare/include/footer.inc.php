@@ -1,23 +1,19 @@
 <?php
-// Pied de page commun
+
 ?>
 <footer class="pied">
     <div class="contenu">
         <div class="pied-colonnes">
-
-            <!-- Colonne 1 : marque et infos binome -->
             <div>
                 <h2>Comparateur de prix </h2>
                 <p>
                     Comparateur de prix des carburants en France metropolitaine,
                     base sur les donnees ouvertes du gouvernement.
                 </p>
-                <p>Projet pedagogique — UE Developpement Web<br />
-                L2 Informatique — CY Cergy Paris Universite</p>
+                <p>Projet pedagogique — UE Developpement Web<br /> L2 Informatique — CY Cergy Paris Universite</p>
                 <p>Binome : <strong>Rayane KHITOUS</strong> &amp; <strong>Hugo DELHELLE</strong></p>
             </div>
 
-            <!-- Colonne 2 : liens de navigation -->
             <div>
                 <h3>Navigation</h3>
                 <ul>
@@ -30,8 +26,9 @@
                 </ul>
             </div>
 
-            <!-- Colonne 3 : sources des donnees -->
+
             <div>
+
                 <h3>Donnees &amp; sources</h3>
                 <ul>
                     <li><a href="https://data.economie.gouv.fr/" target="_blank">data.economie.gouv.fr</a></li>
@@ -41,7 +38,8 @@
                 </ul>
             </div>
 
-            <!-- Colonne 4 : infos techniques -->
+
+
             <div>
                 <h3>Informations</h3>
                 <p><strong>Visites totales :</strong> <?= lireCompteurTotal() ?></p>
@@ -51,13 +49,14 @@
         </div>
     </div>
 
-    <!-- Bande du bas : copyright + liens supplementaires -->
+
+
+
     <div class="pied-bas">
         <div class="contenu">
-            <div>© <?= date('Y') ?> Comparateur de prix <br> Projet L2 Informatique</div>
+            <div>© <?= date('Y') ?> Comparateur de prix <br /> Projet L2 Informatique</div>
             <div>
                 <a href="plan.php">Plan du site</a>
-                <a href="readme.md">README</a>
             </div>
         </div>
     </div>

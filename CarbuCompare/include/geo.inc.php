@@ -39,12 +39,12 @@ function geolocaliser($ip = '') {
     if ($ip === '') $ip = ip_visiteur();
 
     $resultat = [
-        'ok'     => false,
-        'ip'     => $ip,
+        'ok' => false,
+        'ip'  => $ip,
         'ville'  => '',
         'region' => '',
-        'lat'    => null,
-        'lon'    => null,
+        'lat' => null,
+        'lon' => null,
         'erreur' => '',
     ];
 
@@ -71,12 +71,12 @@ function geolocaliser($ip = '') {
     $resultat['ville']  = $data['city']   ?? '';
     $resultat['region'] = $data['region'] ?? '';
 
-    // Le champ 'loc' contient "latitude,longitude" en une chaine
+    // 'loc' contient "latitude,longitude" en une chaine
     if (!empty($data['loc'])) {
         $coords = explode(',', $data['loc']);
         if (count($coords) === 2) {
-            $resultat['lat'] = (float) $coords[0];
-            $resultat['lon'] = (float) $coords[1];
+            $resultat['lat']=(float) $coords[0];
+            $resultat['lon']=(float) $coords[1];
         }
     }
 
@@ -84,8 +84,7 @@ function geolocaliser($ip = '') {
     return $resultat;
 }
 
-// Distance approximative en km entre 2 points GPS (Pythagore simplifie)
-// Precision suffisante pour des distances courtes (< 100 km)
+// Distance approximative en km entre 2 points GPS
 function distance_km($lat1, $lon1, $lat2, $lon2) {
     // 1 degre de latitude = environ 111 km
     // 1 degre de longitude = environ 73 km en France

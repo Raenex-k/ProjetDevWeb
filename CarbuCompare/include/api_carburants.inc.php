@@ -13,16 +13,23 @@ function stations_autour($lat, $lon, $rayon_m = 10000, $limite = 40) {
     $url = API_CARBURANTS . '?limit=' . $limite . '&where=' . urlencode($filtre);
 
     $reponse = appeler_url($url);
-    if ($reponse === null) return [];
+    if ($reponse === null) {
+        
+        return [];
+    }
 
     $data = json_decode($reponse, true);
-    if (!is_array($data) || empty($data['results'])) return [];
+    if (!is_array($data) || empty($data['results'])) {
+        return [];
+    }
 
     // On convertit chaque station dans notre format
     $stations = [];
     foreach ($data['results'] as $brut) {
         $station = preparer_station($brut);
-        if ($station === null) continue;
+        if ($station === null) {
+            continue;
+        }
 
         // Calcul de la distance si on a les coordonnees
         if ($station['lat'] !== null) {
@@ -31,7 +38,7 @@ function stations_autour($lat, $lon, $rayon_m = 10000, $limite = 40) {
         $stations[] = $station;
     }
 
-    // Tri par distance croissante (stations sans distance a la fin)
+    // Tri par distance croissante 
     usort($stations, function ($a, $b) {
         $da = $a['distance_km'] ?? PHP_FLOAT_MAX;
         $db = $b['distance_km'] ?? PHP_FLOAT_MAX;
@@ -58,11 +65,11 @@ function preparer_station($brut) {
     $prix = [];
     $champs_prix = [
         'Gazole' => 'gazole_prix',
-        'SP95'   => 'sp95_prix',
-        'SP98'   => 'sp98_prix',
-        'E10'    => 'e10_prix',
-        'E85'    => 'e85_prix',
-        'GPLc'   => 'gplc_prix',
+        'SP95' => 'sp95_prix',
+        'SP98' => 'sp98_prix',
+        'E10' => 'e10_prix',
+        'E85'  => 'e85_prix',
+        'GPLc' => 'gplc_prix',
     ];
     foreach ($champs_prix as $nom => $champ) {
         if (!empty($brut[$champ])) {
@@ -71,14 +78,14 @@ function preparer_station($brut) {
     }
 
     return [
-        'id'        => $brut['id'],
-        'nom'       => $brut['enseigne'] ?? '',
-        'adresse'   => $brut['adresse']  ?? '',
-        'ville'     => $brut['ville']    ?? '',
-        'cp'        => $brut['cp']       ?? '',
-        'lat'       => $lat,
-        'lon'       => $lon,
-        'autoroute' => ($brut['pop']     ?? '') === 'A',
-        'prix'      => $prix,
+        'id' => $brut['id'],
+        'nom'  => $brut['enseigne'] ?? '',
+        'adresse' => $brut['adresse']  ?? '',
+        'ville' => $brut['ville']    ?? '',
+        'cp'  => $brut['cp']  ?? '',
+        'lat' => $lat,
+        'lon'  => $lon,
+        'autoroute' => ($brut['pop']   ?? '') === 'A',
+        'prix' => $prix,
     ];
 }

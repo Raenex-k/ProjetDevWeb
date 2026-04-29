@@ -1,39 +1,37 @@
 <?php
-// En-tete commun a toutes les pages
 
 // Valeurs par defaut
-if (!isset($page_title))    $page_title    = 'CarbuCompare';
-if (!isset($page_desc))     $page_desc     = 'Prix des carburants en France.';
-if (!isset($page_courante)) $page_courante = '';
+if (!isset($page_title)) $page_title= 'CarbuCompare';
+if (!isset($page_desc)) $page_desc ='Prix des carburants en France.';
+if (!isset($page_courante)) $page_courante= '';
 
 // Gestion du theme (cookie qui dure 30 jours)
 if (isset($_GET['theme']) && in_array($_GET['theme'], ['jour', 'nuit'])) {
-    setcookie('theme', $_GET['theme'], time() + 30 * 24 * 3600, '/');
+    setcookie('theme', $_GET['theme'], time() +30*24*3600, '/');
     $theme = $_GET['theme'];
 } else {
     $theme = $_COOKIE['theme'] ?? 'jour';
 }
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?= clean($page_title) ?> — CarbuCompare</title>
-    <meta name="description" content="<?= clean($page_desc) ?>" />
-    <link rel="stylesheet" href="css/style.css" />
+    <meta name="description" content="<?= clean($page_desc) ?>"/>
+    <link rel="stylesheet" href="css/style.css"/>
     <?php if ($theme === 'nuit') { ?>
-        <link rel="stylesheet" href="css/nuit.css" />
+        <link rel="stylesheet" href="css/nuit.css"/>
     <?php } ?>
-    <link rel="icon" href="images/favicon.png" />
+    <link rel="icon" href="images/favicon.png"/>
 </head>
 <body>
 
 <header>
-    <!-- Haut de l'entete : logo + marque + bouton jour/nuit -->
     <div class="contenu entete-haut">
         <a class="marque" href="index.php">
-            <img src="images/logo.png" alt="" />
+            <img src="images/logo.png" alt=""/>
             <div>
                 <p class="titre" role="heading" aria-level="1">Les prix des carburants</p>
                 <p class="baseline">Prix des carburants en France metropolitaine</p>
@@ -46,16 +44,15 @@ if (isset($_GET['theme']) && in_array($_GET['theme'], ['jour', 'nuit'])) {
         </div>
     </div>
 
-    <!-- Menu de navigation -->
     <nav>
         <div class="contenu">
             <ul>
-                <li><a href="index.php"        class="<?= $page_courante === 'index'      ? 'actif' : '' ?>">Accueil</a></li>
-                <li><a href="carburants.php"   class="<?= $page_courante === 'carburants' ? 'actif' : '' ?>">Comparateur</a></li>
-                <li><a href="stations.php"     class="<?= $page_courante === 'stations'   ? 'actif' : '' ?>">A proximite</a></li>
-                <li><a href="statistiques.php" class="<?= $page_courante === 'stats'      ? 'actif' : '' ?>">Statistiques</a></li>
-                <li><a href="tech.php"         class="<?= $page_courante === 'tech'       ? 'actif' : '' ?>">Tech</a></li>
-                <li><a href="plan.php"         class="<?= $page_courante === 'plan'       ? 'actif' : '' ?>">Plan du site</a></li>
+                <li><a href="index.php" class="<?= $page_courante==='index' ? 'actif' : '' ?>">Accueil</a></li>
+                <li><a href="carburants.php" class="<?= $page_courante==='carburants' ? 'actif' : '' ?>">Comparateur</a></li>
+                <li><a href="stations.php" class="<?= $page_courante==='stations' ? 'actif' : '' ?>">A proximite</a></li>
+                <li><a href="statistiques.php" class="<?= $page_courante==='stats'  ? 'actif' : '' ?>">Statistiques</a></li>
+                <li><a href="tech.php" class="<?= $page_courante==='tech'  ? 'actif' : '' ?>">Tech</a></li>
+                <li><a href="plan.php" class="<?= $page_courante==='plan' ? 'actif' : '' ?>">Plan du site</a></li>
             </ul>
         </div>
     </nav>
