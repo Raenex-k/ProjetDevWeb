@@ -100,7 +100,7 @@ header {
     color: #FFFFFF;
 }
 
-/* Menu du haut */
+
 nav {
     border-top: 1px solid var(--bordure);
 }
@@ -133,20 +133,28 @@ nav a.actif {
     font-weight: 600;
 }
 
-/* Titres et paragraphes */
+
 h1 {
     font-size: 2.25rem;
     color: var(--vert);
     margin: 0 0 16px;
 }
 
-h2 { font-size: 1.6rem; margin: 36px 0 16px; }
-h3 { font-size: 1.2rem; margin: 24px 0 12px; }
+h2 { 
+    font-size: 1.6rem; margin: 36px 0 16px; 
+}
+h3 { 
+    font-size: 1.2rem; margin: 24px 0 12px; 
+}
 
-a { color: var(--vert); }
-a:hover { color: var(--orange); }
+a {
+     color: var(--vert); 
+    }
+a:hover { 
+    color: var(--orange); 
+}
 
-/* Boutons */
+
 .bouton {
     display: inline-block;
     padding: 11px 22px;
@@ -160,10 +168,16 @@ a:hover { color: var(--orange); }
     font-size: 0.95rem;
 }
 
-.bouton:hover { background: #0A3C38; color: #FFFFFF; }
+.bouton:hover { 
+    background: #0A3C38; color: #FFFFFF;
+ }
 
-.bouton-orange { background: var(--orange); }
-.bouton-orange:hover { background: #C2410C; }
+.bouton-orange { 
+    background: var(--orange);
+ }
+.bouton-orange:hover { 
+    background: #C2410C; 
+}
 
 .bouton-vide {
     background: transparent;
@@ -171,9 +185,13 @@ a:hover { color: var(--orange); }
     border: 2px solid var(--vert);
 }
 
-.bouton-vide:hover { background: var(--vert-clair); color: var(--vert); }
+.bouton-vide:hover {
+     background: var(--vert-clair); color: var(--vert); 
+    }
 
-.bouton-petit { padding: 8px 14px; font-size: 0.9rem; }
+.bouton-petit { 
+    padding: 8px 14px; font-size: 0.9rem; 
+}
 
 /* Accueil - accroche en haut */
 .accroche {
@@ -265,7 +283,9 @@ a:hover { color: var(--orange); }
     border-right: 1px solid var(--bordure);
 }
 
-.chiffre:last-child { border-right: none; }
+.chiffre:last-child { 
+    border-right: none;
+ }
 
 .chiffre-valeur {
     font-size: 2.1rem;
@@ -331,14 +351,15 @@ a:hover { color: var(--orange); }
     border-bottom: 1px solid var(--bordure);
 }
 
-.page-titre h1 { margin: 0 0 8px; }
+.page-titre h1 {
+     margin: 0 0 8px; 
+    }
 
 .page-titre p {
     color: var(--gris);
     margin: 0;
 }
 
-/* Page stations - bloc position */
 .position {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -401,7 +422,6 @@ a:hover { color: var(--orange); }
     width: 180px;
 }
 
-/* Page stations - filtres */
 .filtres {
     display: flex;
     gap: 20px;
@@ -431,7 +451,6 @@ a:hover { color: var(--orange); }
     cursor: pointer;
 }
 
-/* Page stations - titre resultats */
 .resultats {
     font-size: 1.1rem;
     margin: 24px 0 16px;
@@ -457,7 +476,6 @@ a:hover { color: var(--orange); }
     font-size: 0.88rem;
 }
 
-/* Page stations - grille et cartes */
 .stations {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -472,7 +490,9 @@ a:hover { color: var(--orange); }
     padding: 18px 20px;
 }
 
-.station:hover { border-color: var(--vert); }
+.station:hover { 
+    border-color: var(--vert);
+ }
 
 .station-haut {
     display: flex;
@@ -561,7 +581,7 @@ a:hover { color: var(--orange); }
     margin: 0;
 }
 
-/* Message "pas de resultat" */
+
 .vide {
     background: var(--fond-beige);
     border: 1px solid var(--bordure);
@@ -571,8 +591,12 @@ a:hover { color: var(--orange); }
     margin: 20px 0;
 }
 
-.vide h2 { color: var(--vert); margin-top: 0; }
-.vide p { color: var(--gris); max-width: 520px; margin: 0 auto; }
+.vide h2 {
+     color: var(--vert); margin-top: 0; 
+    }
+.vide p { 
+    color: var(--gris); max-width: 520px; margin: 0 auto; 
+}
 
 .rappel {
     margin: 32px 0 0;
@@ -583,7 +607,7 @@ a:hover { color: var(--orange); }
     color: var(--gris);
 }
 
-/* Pied de page */
+
 .pied {
     background: var(--pied-fond);
     color: var(--pied-texte);
@@ -655,7 +679,7 @@ a:hover { color: var(--orange); }
 
 .pied-bas a:hover { color: #FFFFFF; }
 
-/* Plan du site : liste des pages */
+
 .liste-pages {
     list-style: none;
     padding: 0;
@@ -678,14 +702,16 @@ a:hover { color: var(--orange); }
     margin-right: 10px;
 }
 
-.liste-pages a:hover { color: var(--orange); }
+.liste-pages a:hover { 
+    color: var(--orange); 
+}
 
 .liste-pages span {
     color: var(--gris);
     font-size: 0.9rem;
 }
 
-/* Page statistiques : histogramme en tableau */
+
 .histogramme {
     width: 100%;
     border-collapse: collapse;
@@ -711,7 +737,9 @@ a:hover { color: var(--orange); }
     border-bottom: 1px solid var(--bordure);
 }
 
-.histogramme tr:last-child td { border-bottom: none; }
+.histogramme tr:last-child td { 
+    border-bottom: none; 
+}
 
 .histogramme .nombre {
     font-weight: 700;
@@ -756,9 +784,11 @@ a:hover { color: var(--orange); }
     margin: 0 0 12px;
 }
 
-.film p { margin: 6px 0; }
+.film p {
+     margin: 6px 0; 
+    }
 
-/* Adaptation ecrans plus petits */
+
 @media (max-width: 992px) {
     .cartes, .chiffres, .sources-liste { grid-template-columns: repeat(2, 1fr); }
     .position { grid-template-columns: 1fr; }
@@ -806,7 +836,7 @@ a:hover { color: var(--orange); }
     gap: 8px;
     margin: 10px 0 32px;
 }
-/* Etape 1 du comparateur : carte a gauche + boutons regions a droite */
+
 .etape-region {
     display: flex;
     gap: 30px;
