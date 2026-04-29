@@ -3,13 +3,13 @@
 require_once "include/functions.inc.php";
 require_once "include/geo.inc.php";
 
-$page_title    = "Page technique";
-$page_desc     = "Demonstration des flux JSON et XML utilises par le site.";
-$page_courante = "tech";
+$page_title = "Page technique";
+$page_desc= "Demonstration des flux JSON et XML utilises par le site.";
+$page_courante="tech";
 
 incrementerCompteur('tech');
 
-// 1) JSON : On utilise l'Api Ghilbi 
+// PArtie 1 : JSON : On utilise l'Api Ghilbi 
 $film = null;
 $json = appeler_url('https://ghibliapi.vercel.app/films');
 if ($json !== null) {
@@ -17,8 +17,8 @@ if ($json !== null) {
     if (is_array($films)) $film = $films[array_rand($films)];
 }
 
-// 2) XML : geolocalistion IP via whatismyip
-$cle_api = '550cb4eb35cc369ec3f9c91a854e9fbe'; // Cette Api utilise une clé que j'ai générer apres avoir créer mon compte 
+// Partie 2 :XML : geolocalistion IP via whatismyip
+$cle_api = '550cb4eb35cc369ec3f9c91a854e9fbe'; // clé  générer apres avoir créer un compte 
 $ip_test = $_GET['ip'] ?? '193.54.115.192';
 $geo = null;
 
@@ -28,17 +28,17 @@ $reponse = appeler_url($url);
 if ($reponse !== null) {
     $xml = @simplexml_load_string($reponse);
     if ($xml !== false) {
-        // Les donnees sont dans <server_data>, pas a la racine
+
         $data = $xml->server_data;
         $geo = [
-            'ip'     => (string) $data->ip,
-            'pays'   => (string) $data->country,
+            'ip' => (string) $data->ip,
+            'pays'  => (string) $data->country,
             'region' => (string) $data->region,
-            'ville'  => (string) $data->city,
-            'cp'     => (string) $data->postalcode,
-            'isp'    => (string) $data->isp,
-            'lat'    => (string) $data->latitude,
-            'lon'    => (string) $data->longitude,
+            'ville' => (string) $data->city,
+            'cp' => (string) $data->postalcode,
+            'isp' => (string) $data->isp,
+            'lat' => (string) $data->latitude,
+            'lon' => (string) $data->longitude,
         ];
     }
 }
@@ -57,15 +57,14 @@ require_once "include/header.inc.php";
 
 <div class="contenu">
 
-    <!-- PARTIE 1 : JSON GHIBLI -->
-    <h2>1- Flux JSON : Api Ghibli</h2>
+    <h2>1. Flux JSON : Api Ghibli</h2>
     <?php if ($film !== null) { ?>
         <div class="film">
             <img src="<?= clean($film['image']) ?>" alt="<?= clean($film['title']) ?>" class="film-image" />
             <div>
                 <h3><?= clean($film['title']) ?></h3>
-                <p><strong>Titre original :</strong>
-                   <span lang="ja"><?= clean($film['original_title']) ?></span></p>
+                <p><strong>Titre original :</strong>  <span lang="ja"><?= clean($film['original_title']) ?></span></p>
+
                 <p><strong>Annee :</strong> <?= clean($film['release_date']) ?></p>
                 <p><strong>Realisateur :</strong> <?= clean($film['director']) ?></p>
                 <p><?= clean($film['description']) ?></p>
@@ -76,8 +75,8 @@ require_once "include/header.inc.php";
     <?php } ?>
 
 
-    <!-- PARTIE 2 : XML WHATISMYIP -->
-    <h2>2. Flux XML : geolocalisation par IP</h2>
+    
+    <h2>2. Flux XML : geolocalisation par adresse IP</h2>
     <form method="get" action="tech.php" class="filtres">
         <div class="filtre">
             <label for="ip">Adresse IP</label>
@@ -87,6 +86,7 @@ require_once "include/header.inc.php";
     </form>
 
     <?php if ($geo === null) { ?>
+    
         <p class="rappel">L'API n'a pas pu etre jointe ou la reponse XML est invalide.</p>
     <?php } else { ?>
         <div class="position">

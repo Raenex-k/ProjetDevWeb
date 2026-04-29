@@ -3,9 +3,9 @@
 
 require_once "include/functions.inc.php";
 
-$page_title    = "Plan du site";
-$page_desc     = "Liste de toutes les pages du site CarbuCompare.";
-$page_courante = "plan";
+$page_title="Plan du site";
+$page_desc="Liste de toutes les pages du site CarbuCompare.";
+$page_courante="plan";
 
 incrementerCompteur('plan');
 
@@ -14,7 +14,6 @@ require_once "include/header.inc.php";
 
 <main>
 
-<!-- Titre de la page -->
 <section class="page-titre">
     <div class="contenu">
         <h1>Plan du site</h1>
@@ -48,7 +47,7 @@ require_once "include/header.inc.php";
     <ul class="liste-pages">
         <li>
             <a href="tech.php"><strong>Page technique</strong></a>
-            <span>Demonstration des flux JSON (Ghibli) et XML (geoloc IP).</span>
+            <span>Demonstration des flux JSON (Ghibli) et XML (geoloc par IP).</span>
         </li>
         <li>
             <a href="plan.php"><strong>Plan du site</strong></a>
