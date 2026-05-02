@@ -1,6 +1,11 @@
 <?php
 // Page pour le comparateur : carte des regions -> departement -> ville -> prix
-
+/**
+ * @file carburants.php
+ * @brief Page pour le comparateur : carte des regions -> departement -> ville -> prix
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
 require_once "include/functions.inc.php";
 require_once "include/api_carburants.inc.php";
 require_once "include/geo.inc.php";

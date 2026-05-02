@@ -1,6 +1,11 @@
 <?php
 // Page "Plan du site" : liste simple de toutes les pages
-
+/**
+ * @file plan.php
+ * @brief Page "Plan du site" : liste simple de toutes les pages
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
 require_once "include/functions.inc.php";
 
 $page_title="Plan du site";

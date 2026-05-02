@@ -1,5 +1,13 @@
 <?php
-//page tech : Cette page utilise JSON pour récupérer les films et XML pourla géolocalisation via ip
+
+/**
+ * @file tech.php
+ * @brief Page "Technique" : demonstration des flux JSON et XML
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
+
+
 require_once "include/functions.inc.php";
 require_once "include/geo.inc.php";
 

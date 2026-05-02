@@ -1,5 +1,11 @@
 <?php
-// Page "Stations a proximite" : geoloc par IP + liste des stations autour
+
+/**
+ * @file stations.php
+ * @brief Page "Stations a proximite" : geoloc par IP + liste des stations autour
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
 
 require_once "include/functions.inc.php";
 require_once "include/geo.inc.php";

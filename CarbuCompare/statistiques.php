@@ -1,5 +1,12 @@
 <?php
-// Page "Statistiques" : visites par page + villes les plus consultees
+
+
+/**
+ * @file statistiques.php
+ * @brief Page "Statistiques" : visites par page + villes les plus consultees
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
 
 require_once "include/functions.inc.php";
 
@@ -48,7 +55,7 @@ require_once "include/header.inc.php";
 <section class="page-titre">
     <div class="contenu">
         <h1>Statistiques du site</h1>
-        <p>Villes les plus consultees et activite globale.</p>
+        <p>Villes les plus consultées et activite globale.</p>
     </div>
 </section>
 

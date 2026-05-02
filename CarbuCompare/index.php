@@ -1,5 +1,11 @@
 <?php
-// Page d'accueil de CarbuCompare
+
+/**
+ * @file index.php
+ * @brief Page principale.
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
 
 require_once "include/functions.inc.php";
 
