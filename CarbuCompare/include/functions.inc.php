@@ -1,12 +1,31 @@
 <?php
+/**
+ * @file functions.inc.php
+ * @brief Fonctions utilitaires.
+ * @details Ce fichier contient les outils de traitement des fichiers CSV.
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
 
-// Nettoie une chaine pour l'afficher dans le HTML
+
+
+/**
+ * Nettoie une chaîne de caractères pour un l'affichage HTML.
+ * @param string|null $texte La chaîne de caractères à traiter.
+ * @return string La chaîne nettoyée.
+ * @see https://www.php.net/manual/fr/function.htmlspecialchars.php
+ * @see https://www.php.net/manual/fr/function.trim.php
+ */
 function clean($texte) {
     if ($texte === null) return '';
     return htmlspecialchars(trim($texte), ENT_QUOTES, 'UTF-8');
 }
 
-// Compte les communes dans le CSV (hors ligne d'entete)
+/**
+ * Calcule le nombre total de communes.
+ * @return int Nombre de communes .
+ * @see https://www.php.net/manual/fr/function.file-get-contents.php
+ */
 function nb_communes() {
     $fichier=__DIR__ . '/../data/communes.csv';
     if (!file_exists($fichier)) {
@@ -20,7 +39,12 @@ function nb_communes() {
     return $n;
 }
 
-// Compte les departements (on enleve les DOM-TOM : regions 01 a 06)
+/**
+ * Compte les départements du fichier CSV
+ * @details exclut les dom-tom donc 01 à 06.
+ * @return int Nombre de départements.
+ * @see https://www.php.net/manual/fr/function.fgetcsv.php
+ */
 function nb_departements() {
     $fichier = __DIR__ . '/../data/departements.csv'; 
     if (!file_exists($fichier)) {
@@ -42,7 +66,11 @@ function nb_departements() {
 }
 
 
-// Date de derniere modif du fichier des communes
+/**
+ * Récupère la date de dernière mise à jour du fichier des communes.
+ * @return string Date ou chaîne vide.
+ * @see https://www.php.net/manual/fr/function.filemtime.php
+ */
 function date_maj_donnees() {
     $fichier = __DIR__ . '/../data/communes.csv';
     if (!file_exists($fichier)) {
@@ -53,7 +81,10 @@ function date_maj_donnees() {
 
 
 
-// Lit le compteur total de visites
+/**
+ * Calcule le nombre de visites enregistrées pour toutes les pages.
+ * @return int Cumul total des visites.
+ */
 function lireCompteurTotal() {
     $fichier= __DIR__ . '/../data/compteur.txt';
     if (!file_exists($fichier)) {
@@ -68,7 +99,11 @@ function lireCompteurTotal() {
     return $total;
 }
 
-// Incremente le compteur d'une page
+/**
+ * Incrémente le compteur de visites pour une page spécifique.
+ * @param string $page Identifiant de la page.
+ * @see https://www.php.net/manual/fr/function.file-put-contents.php
+ */
 function incrementerCompteur($page) {
     $fichier = __DIR__ . '/../data/compteur.txt';
 
@@ -92,7 +127,14 @@ function incrementerCompteur($page) {
 }
 
 
-
+/**
+ * Mémorise la dernière ville consultée dans un cookie pour 30 jours.
+ * @param string $insee Code INSEE de la commune.
+ * @param string $ville Nom de la ville.
+ * @param string $cp Code postal.
+ * @see https://www.php.net/manual/fr/function.json-encode.php
+ * @see https://www.php.net/manual/fr/function.setcookie.php
+ */
 function enregistrer_derniere_ville($insee, $ville, $cp) {
     $data = json_encode([
         'insee' => $insee,
@@ -102,8 +144,12 @@ function enregistrer_derniere_ville($insee, $ville, $cp) {
     setcookie('derniereville', $data, time() + 30*24 *3600, '/');
 }
 
-
-
+/**
+ * Enregistre une consultation de ville dans un fichier log.
+ * @param string $insee Code INSEE.
+ * @param string $ville Nom.
+ * @param string $cp Code postal.
+ */
 function logger_ville_consultee($insee, $ville, $cp) {
     $fichier = __DIR__ . '/../data/villes_consultees.csv';
 
@@ -120,7 +166,12 @@ function logger_ville_consultee($insee, $ville, $cp) {
 
 
 
-
+/**
+ * Récupère le classement des villes les plus consultées à partir du log.
+ * @param int $limite Nombre de résultats souhaités (par défaut 10).
+ * @return array Tableau associatif [Nom de ville => nombre de visites].
+ * @see https://www.php.net/manual/fr/function.arsort.php
+ */
 function villes_les_plus_consultees($limite = 10) {
     $fichier = __DIR__ . '/../data/villes_consultees.csv';
     if (!file_exists($fichier)) {

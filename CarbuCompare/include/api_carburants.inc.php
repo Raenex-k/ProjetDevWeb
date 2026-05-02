@@ -1,12 +1,31 @@
 <?php
 // API des prix des carburants (data.economie.gouv.fr)
 
+/**
+ * @file api_carburants.inc.php
+ * @brief Fonctions pour interagir avec l'API des prix des carburants.
+ * @details Ce fichier contient les fonctions pour récupérer et traiter les données de l'API.
+ * @author Rayane Khitous / Hugo Delhelle
+ * @date Avril 2026
+ */
+
+
 const API_CARBURANTS = 'https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records';
 
 // Liste des 6 carburants suivis
 const CARBURANTS = ['Gazole', 'SP95', 'SP98', 'E10', 'E85', 'GPLc'];
 
-// Recupere les stations dans un rayon autour d'un point GPS
+/**
+ * Récupère les stations-service dans un périmètre donné autour de coordonnées GPS.
+ * @details La fonction construit une requête (within_distance) pour l'API.
+ * @param float $lat Latitude du centre de recherche.
+ * @param float $lon Longitude du centre de recherche.
+ * @param int $rayon_m Rayon de recherche en mètres (par défaut 10 000m).
+ * @param int $limite Nombre maximum de stations à renvoyer (par défaut 40).
+ * @return array Liste des stations triées par distance croissante, ou tableau vide en cas d'erreur.
+ * @see https://www.php.net/manual/fr/function.urlencode.php
+ * */
+
 function stations_autour($lat, $lon, $rayon_m = 10000, $limite = 40) {
     // Filtre spatial fourni par l'API
     $filtre = "within_distance(geom, geom'POINT($lon $lat)', {$rayon_m}m)";
@@ -48,12 +67,16 @@ function stations_autour($lat, $lon, $rayon_m = 10000, $limite = 40) {
     return $stations;
 }
 
-// Convertit une station brute (API) en format utilisable
+/**
+ * Transforme les données brutes de l'API en un tableau structuré .
+ * @details Gère notamment la conversion des coordonnées PTV_GEODECIMAL de l'API en coordonnées GPS standards.
+ * @param array $brut Les données d'une station telles que renvoyées par l'API.
+ * @return array|null Un tableau associatif formaté ou null si les données essentielles sont absentes.
+ */
 function preparer_station($brut) {
     if (!is_array($brut) || empty($brut['id']) || empty($brut['ville'])) return null;
 
-    // Coordonnees GPS : l'API renvoie latitude/longitude en PTV_GEODECIMAL
-    // (= coord. standards multipliees par 100000). On divise pour avoir des GPS normales.
+    // Coordonnees GPS : l'API renvoie latitude/longitude(= coord. standards multipliees par 100000). On divise pour avoir des GPS normales.
     $lat = null;
     $lon = null;
     if (isset($brut['latitude']) && isset($brut['longitude'])) {
