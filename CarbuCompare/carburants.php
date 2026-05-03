@@ -22,6 +22,26 @@ $region= $_GET['region'] ?? '';
 $dep=$_GET['dep'] ?? '';
 $ville= $_GET['ville']  ?? '';
 
+// Dernière ville consultée en cookie
+$derniere_ville = recuperer_derniere_ville();
+if ($ville === '' && $derniere_ville !== null && !empty($derniere_ville['insee'])) {
+    $ville = $derniere_ville['insee'];
+    if ($dep === '') {
+        $dep = substr($ville, 0, 2);
+    }
+}
+if ($region === '' && $dep !== '') {
+    $f = fopen(__DIR__ . '/data/departements.csv', 'r');
+    fgetcsv($f, 0, ',', '"', '\\');
+    while (($l = fgetcsv($f, 0, ',', '"', '\\')) !== false) {
+        if ($l[0] === $dep) {
+            $region = $l[1];
+            break;
+        }
+    }
+    fclose($f);
+}
+
 // Recherche directe par nom de ville
 $recherche= trim($_GET['recherche'] ?? '');
 $resultats_recherche=[];
@@ -118,6 +138,15 @@ if (isset($villes[$ville])) {
     $stations = stations_autour($infos_ville['lat'], $infos_ville['lon'], 10000, 20);
 }
 
+$derniere_ville = recuperer_derniere_ville();
+if ($infos_ville !== null) {
+    $derniere_ville = [
+        'insee' => $ville,
+        'ville' => $infos_ville['nom'],
+        'cp' => $infos_ville['cp'],
+        'date' => date('Y-m-d H:i:s'),
+    ];
+}
 
 ?>
 
@@ -144,7 +173,17 @@ if (isset($villes[$ville])) {
     </div>
 
 
-
+    
+    <div class="contenu">
+    <?php if ($derniere_ville !== null) { ?>
+        <div class="rappel">
+            Dernière ville consultée : <strong><?= clean($derniere_ville['ville']) ?> (<?= clean($derniere_ville['cp']) ?>)</strong>
+            <?php if (!empty($derniere_ville['date'])) { ?>
+                le <?= clean(date('d/m/Y H:i', strtotime($derniere_ville['date']))) ?>.
+            <?php } ?>
+        </div>
+    <?php } ?>
+    </div>
 
 
 
@@ -162,6 +201,7 @@ if (isset($villes[$ville])) {
             <?php } ?>
         </div>
     <?php } ?>
+    
 
 <div class="contenu">
 

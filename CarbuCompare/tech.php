@@ -22,10 +22,12 @@ $film = null;
 $json = appeler_url('https://ghibliapi.vercel.app/films');
 if ($json !== null) {
     $films = json_decode($json, true);
-    if (is_array($films)) $film = $films[array_rand($films)];
+    if (is_array($films)) {
+        $film = $films[array_rand($films)];
+    }
 }
 
-// Partie 2 :XML : geolocalistion IP via whatismyip
+// Partie 1 :XML : geolocalistion IP via whatismyip
 $cle_api = '550cb4eb35cc369ec3f9c91a854e9fbe'; // clé  générer apres avoir créer un compte 
 $ip_test = $_GET['ip'] ?? '193.54.115.192';
 $geo = null;
