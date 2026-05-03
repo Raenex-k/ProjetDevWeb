@@ -140,8 +140,27 @@ function enregistrer_derniere_ville($insee, $ville, $cp) {
         'insee' => $insee,
         'ville' => $ville,
         'cp' => $cp,
+        'date' => date('Y-m-d H:i:s'),
     ]);
     setcookie('derniereville', $data, time() + 30*24 *3600, '/');
+}
+
+/**
+ * Récupère la dernière ville consultée depuis le cookie si présent.
+ * @return array|null Tableau avec insee, ville, cp, date ou null si cookie absent.
+ */
+function recuperer_derniere_ville() {
+    if (empty($_COOKIE['derniereville'])) {
+        return null;
+    }
+    $data = json_decode($_COOKIE['derniereville'], true);
+    if (!is_array($data)) {
+        return null;
+    }
+    if (empty($data['date'])) {
+        $data['date'] = date('Y-m-d H:i:s');
+    }
+    return $data;
 }
 
 /**
