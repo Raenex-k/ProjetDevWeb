@@ -1,0 +1,80 @@
+Ahh, LA question fondamentale ! Comment le device envoie concrètement les infos. Démontons ça étape par étape — c'est le flux complet, et c'est important de le visualiser.
+Le déclencheur : qu'est-ce qui fait que le mobile envoie ?
+C'est l'app mobile qui décide quand envoyer, selon une logique côté front :
+Le mobile envoie sa position quand :
+   - l'app s'ouvre
+   - le client se déplace (changement de position détecté)
+   - à intervalle régulier (toutes les X min, si l'app le décide)
+   - un événement déclencheur (selon la logique métier mobile)
+Toi (backend), tu décides pas ça. C'est l'équipe mobile qui code la logique "quand envoyer".
+Le flux complet — étape par étape
+1. L'app mobile capte la position
+   (via GPS/Wi-Fi/réseau, le système Android/iOS lui donne lat/lng)
+        ↓
+2. L'app construit une requête HTTP POST (ou PATCH)
+   URL  : /customers/123/devices/DEV-1/position
+   Header : X-JWT-Assertion: eyJhbGc...   (le token du client connecté)
+   Body : { "latitude": 48.8566, "longitude": 2.3522, "accuracy": 12.0 }
+        ↓
+3. La requête voyage sur internet jusqu'à ton serveur
+        ↓
+4. Ton API la reçoit :
+   - l'interceptor valide le JWT + compare customerId
+   - JAX-RS découpe : customerId/deviceId (URL) + le body (JSON)
+        ↓
+5. Ta Resource → Service → vérif consentement → stockage
+        ↓
+6. Ton API renvoie une réponse :
+   HTTP 200 + { "customerId": "123", "savedAt": "...", "status": "CREATED" }
+        ↓
+7. L'app mobile reçoit la réponse → sait que c'est OK
+Concrètement, à quoi ressemble la requête envoyée
+C'est une requête HTTP classique. Côté mobile, ça ressemble à ça (exemple Android avec Retrofit) :
+POST https://api.cacf.../customers/123/devices/DEV-1/position
+Headers:
+   X-JWT-Assertion: eyJhbGciOiJ...    ← le token du client
+   Content-Type: application/json
+Body:
+   {
+     "latitude": 48.8566,
+     "longitude": 2.3522,
+     "accuracy": 12.0
+   }
+C'est tout. Une URL + un header avec le token + un body JSON avec les coordonnées.
+La séparation des responsabilités
+C'est crucial de comprendre qui fait quoi :
+ÉQUIPE MOBILE (pas toi) :
+   - capter la position (GPS)
+   - décider quand envoyer
+   - construire et envoyer la requête HTTP
+   - mettre le bon token, le bon deviceId
+
+TOI (backend) :
+   - recevoir la requête
+   - valider (sécurité, consentement, données)
+   - stocker
+   - renvoyer une réponse
+Tu codes le récepteur. L'équipe mobile code l'émetteur. Vous vous mettez d'accord sur le contrat (l'URL, le format du body) — et c'est exactement ce que ton DDS et ton étude technique définissent !
+Le point important : c'est ton DDS qui définit le contrat
+Ton DDS dit :
+   "POST /customers/{customerId}/devices/{deviceId}/position
+    body : latitude, longitude, accuracy"
+        ↓
+L'équipe mobile LIT ton DDS
+        ↓
+Elle code l'app pour envoyer EXACTEMENT ce format
+        ↓
+→ les deux côtés se comprennent ✅
+C'est pour ça que ton DDS est important : c'est le contrat que l'équipe mobile va suivre pour savoir quoi t'envoyer et comment.
+Le schéma final
+   MOBILE (équipe mobile)              TON BACKEND (toi)
+   ─────────────────────              ─────────────────
+   capte position GPS
+   construit requête HTTP
+   POST + JWT + body JSON    ───────→  reçoit la requête
+                                        valide (sécu, consent, data)
+                                        stocke en base
+   reçoit la réponse         ←───────  renvoie 200 + confirmation
+
+En résumé : le device envoie les infos via une requête HTTP POST/PATCH classique : une URL (/customers/.../position), un header avec le JWT (le token du client), et un body JSON avec latitude, longitude, accuracy. C'est l'app mobile qui capte la position et construit cette requête (pas toi). Toi tu codes le récepteur qui reçoit, valide et stocke. Et c'est ton DDS qui définit le contrat que l'équipe mobile suit pour savoir quoi t'envoyer. 😄
+Donc t'as pas à coder l'envoi — juste la réception. Et ça, c'est ton Service + ta Resource.
