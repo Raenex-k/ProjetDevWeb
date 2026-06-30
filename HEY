@@ -1,0 +1,5 @@
+Salut [Prénom],
+
+Pour le consentement géoloc : je voulais réutiliser la table Preference avec un code "GEOLOCATION", mais le service notif fait findByCustomerId sans filtrer. Si j'ajoute un code, le client a 2 lignes et ça peut casser le notif.
+
+Du coup soit table dédiée (je touche à rien), soit on modifie le notif pour filtrer par notifCode. Je penche pour la table dédiée. T'en penses quoi ?
